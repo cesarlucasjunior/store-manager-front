@@ -16,7 +16,7 @@ export default function AuthInput(props:AuthInputProps) {
                 value={props.valor}
                 required={props.obrigatorio} 
                 onChange={e => props.valorMudou?.(e.target.value)}
-                className="px-4 py-3 rounded-lg bg-grey-200 mt-2 border 
+                className="px-4 py-3 rounded-lg bg-grey-200 mt-2 border text-black
                     focus:border-blue-500 focus:bg-white focus:outline-none"
             />
         </div>
