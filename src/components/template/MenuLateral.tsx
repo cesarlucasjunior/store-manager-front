@@ -1,8 +1,10 @@
+import useAuth from "@/data/hook/useAuth";
 import { EmployeeIcon, GoalIcon, HomeIcon, LogoutIcon, ResultIcon, SettingsIcon } from "../icons";
 import Logo from "./Logo";
 import MenuItem from "./MenuItem";
 
 export default function MenuLateral() {
+    const {logout} = useAuth()
     return (
         <aside className={`
             flex flex-col
@@ -26,7 +28,7 @@ export default function MenuLateral() {
             <ul>
                 <MenuItem 
                     url="" 
-                    onClick={() => console.log('Logout')} 
+                    onClick={logout} 
                     texto="Sair" 
                     icone={LogoutIcon} 
                     className={`

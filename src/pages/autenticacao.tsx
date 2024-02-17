@@ -1,24 +1,27 @@
 import AuthInput from "@/components/auth/AuthInput";
 import { WarningIcon } from "@/components/icons";
+import useAuth from "@/data/hook/useAuth";
 import { useState } from "react";
 
 export default function Autenticacao() {
+    const { login } = useAuth()
+
+    const [erro, setErro] = useState(null)
     const [modo, setModo] = useState<'login' | 'cadastro'>('login')
     const [email, setEmail] = useState('')
     const [senha, setSenha] = useState('')
-    const [erro, setErro] = useState('')
 
-    function exibirErro(msg: string, duracaoEmSegundos=5) {
+    function exibirErro(msg, duracaoEmSegundos=5) {
         setErro(msg)
-        setTimeout(() => setErro(''), duracaoEmSegundos * 1000)
+        setTimeout(() => setErro(null), duracaoEmSegundos * 1000)
     }
 
-    function submeter() {
-        if(modo === 'login') {
-            console.log('Efetuando login...')
-            exibirErro('Ocorreu erro no login')
-        } else {
-            console.log('Cadastrar')
+    async function submeter() {
+        try {
+           await login(email, senha) 
+        } catch(e) {
+            console.log('Exiba mensagem de erro')
+            exibirErro(e?.message ?? 'Erro desconhecido!')
         }
     }
 
@@ -61,10 +64,10 @@ export default function Autenticacao() {
 
                 <hr className="my-6 border-grey-300 w-full" />
 
-                <button onClick={submeter}
+                {/* <button onClick={submeter}
                     className="w-full bg-red-500 hover:bg-red-400 text-white rounded-lg px-4 py-3">
                     Entrar com Google
-                </button>
+                </button> */}
             </div>
         </div>
     )
