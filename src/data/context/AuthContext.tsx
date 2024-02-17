@@ -2,7 +2,6 @@ import User from "@/model/User";
 import { createContext, useEffect, useState } from "react";
 import route from 'next/router'
 import Cookies from 'js-cookie'
-import { jwtDecode } from "jwt-decode";
 
 interface AuthContextProps {
     user?: User,

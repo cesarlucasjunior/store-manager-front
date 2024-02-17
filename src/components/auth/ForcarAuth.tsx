@@ -4,7 +4,7 @@ import loading from '../../../public/loading.gif'
 import useAuth from "@/data/hook/useAuth"
 import route from 'next/router'
 
-export default function ForcarAuth(props) {
+export default function ForcarAuth(props: any) {
     const { user, carregando } = useAuth()
 
     function renderContent() {
