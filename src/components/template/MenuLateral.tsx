@@ -1,5 +1,5 @@
 import useAuth from "@/data/hook/useAuth";
-import { EmployeeIcon, GoalIcon, HomeIcon, LogoutIcon, ResultIcon, SettingsIcon } from "../icons";
+import { EmployeeIcon, GoalIcon, HomeIcon, LogoutIcon, ResultIcon, SettingsIcon, StoreIcon } from "../icons";
 import Logo from "./Logo";
 import MenuItem from "./MenuItem";
 
@@ -23,6 +23,7 @@ export default function MenuLateral() {
                 <MenuItem url="metas" texto="Metas" icone={GoalIcon} />
                 <MenuItem url="resultados" texto="Resultados" icone={ResultIcon} />
                 <MenuItem url="funcionarias" texto="Funcionárias" icone={EmployeeIcon} />
+                <MenuItem url="loja" texto="Loja" icone={StoreIcon} />
                 <MenuItem url="/ajustes" texto="Configuração" icone={SettingsIcon} />
             </ul>
             <ul>
