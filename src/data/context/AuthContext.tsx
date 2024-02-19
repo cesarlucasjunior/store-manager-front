@@ -55,7 +55,6 @@ export function AuthProvider(props: any) {
                 token: userToken,
                 role: userRole
             }
-            console.log(user)
             setUser(user)
         }
         setCarregando(false)
@@ -77,7 +76,6 @@ export function AuthProvider(props: any) {
 
     const login = async (email: string, senha:string) => {
         try {
-            console.log("logando...")
             const response = await fetch('http://localhost:8080/auth/login', {
                 method: 'POST',
                 headers: {
