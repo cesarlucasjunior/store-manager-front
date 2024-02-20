@@ -1,13 +1,14 @@
 import { useState } from "react";
 import Cookies from 'js-cookie'
+import Store from "@/model/Store";
 
 export default function useStoreApi() {
     const [hasData, setHasData] = useState(false)
-    const [carregando, setCarregando] = useState()
+    const [carregando, setCarregando] = useState(false)
     const [name, setName] = useState()
     const [cnpj, setCnpj] = useState()
-    const [operationStatus, setOperationStatus] = useState()
-    const [message, setMessage ] = useState()
+    const [operationStatus, setOperationStatus] = useState('')
+    const [message, setMessage ] = useState('')
     
 
     const URL_SERVER = 'http://localhost:8080'
@@ -15,7 +16,7 @@ export default function useStoreApi() {
     function enviarStatusOperacao(status: string, message:string, duracaoEmSegundos=5) {
         setOperationStatus(status)
         setMessage(message)
-        setTimeout(() => setOperationStatus(null), duracaoEmSegundos * 1000)
+        setTimeout(() => setOperationStatus(''), duracaoEmSegundos * 1000)
     }
 
     async function getStore(token: string) {
@@ -30,7 +31,6 @@ export default function useStoreApi() {
             });
             if(!response.ok) {
                 if(response.status === 403) {
-                    console.log("Pronto calabreso, trata aqui.")
                     setHasData(false)
                 } else {
                     enviarStatusOperacao('error', 'Falha durante operação', 15)
@@ -71,7 +71,6 @@ export default function useStoreApi() {
                 enviarStatusOperacao('error', 'Falha durante operação', 15)
                 throw new Error('Erro ao realizar a solicitação POST - Store');
             }
-            console.log(response)
             enviarStatusOperacao('success', 'Registro salvo com sucesso!')
             getStore(token!!)
             setCarregando(false)
