@@ -5,47 +5,9 @@ import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure
 import { Input } from "@nextui-org/input";
 import {RadioGroup, Radio} from "@nextui-org/radio";
 import { useEffect, useState } from "react";
-import useEmployeeApi from "@/data/hook/useEmployeeApi";
-import { User } from "@nextui-org/user";
 import React from "react";
-import { Chip, ChipProps } from "@nextui-org/chip";
-import { Tooltip } from "@nextui-org/tooltip";
-import { PencilIcon, TrashIcon } from "@/components/icons";
-
-const columns = [
-  {
-    id: "name",
-    label: "NOME",
-  },
-  {
-    id: "cpf",
-    label: "CPF",
-  },
-  {
-    id: "birthDate",
-    label: "DATA DE NASCIMENTO",
-  },
-  {
-    id: "address",
-    label: "ENDEREÇO",
-  },
-  {
-    id: "hiringDate",
-    label: "DATA CONTRATAÇÃO",
-  },
-  {
-    id: "isActive",
-    label: "ATIVO",
-  },
-  {
-    id: "employeeType",
-    label: "TIPO",
-  },
-  {
-    id: "actions",
-    label: "AÇÕES",
-  },
-]
+import useEmployeeApi from "@/data/hook/useEmployeeApi";
+import TabelaFuncionario from "@/components/template/TabelaFuncionaria";
 
 export default function Funcionarias() {
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure()
@@ -65,59 +27,7 @@ export default function Funcionarias() {
 
   useEffect(() => {
     fetchEmployeeData()
-  },[])
-
-  const statusColorMap: Record<string, ChipProps["color"]>  = {
-    ATIVA: "success",
-    INATIVA: "danger"
-  };
-
-  type User = typeof employeeList[0]
-
-  const renderizarCelulaPersonalizada = React.useCallback((user: User,  columnKey: React.Key) => {
-    const cellValue = user[columnKey as keyof User];
-    switch (columnKey) {
-      case "name":
-        return (
-          <User
-            avatarProps={{radius: "md", name: ""}}
-            description="teste@teste.com"
-            name={cellValue}
-          >
-            teste@teste.com
-          </User>
-        );
-      case "employeeType":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
-          </div>
-        );
-      case "isActive":
-        return (
-          <Chip className="capitalize" color={statusColorMap[user.isActive]} size="sm" variant="flat">
-            {cellValue}
-          </Chip>
-        );
-      case "actions":
-        return (
-          <div className="relative flex items-center gap-2">
-            <Tooltip color="warning" content="Editar" className="px-1 py-1">
-              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                {PencilIcon} 
-              </span>
-            </Tooltip>
-            <Tooltip color="danger" content="Deletar" className="px-1 py-1">
-              <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                {TrashIcon}
-              </span>
-            </Tooltip>
-          </div>
-        );
-      default:
-        return cellValue;
-    }
-  }, []);
+  },[])  
 
   return carregando ? (<p className="text-white">Carregando...</p>) : (
     <Layout titulo="Funcionárias" subtitulo="Gerenciando as Funcionárias.">
@@ -177,18 +87,7 @@ export default function Funcionarias() {
           </ModalContent>
         </Modal>
       </div>
-        <Table aria-label="Example static collection table">
-          <TableHeader columns={columns}>
-            {(column) => <TableColumn key={column.id}>{column.label}</TableColumn>}
-          </TableHeader>
-          <TableBody emptyContent={"Nenhum registro encontrado."} items={employeeList}>
-            {(item) => (
-              <TableRow key={item.key}>
-                {(columnKey) => <TableCell>{renderizarCelulaPersonalizada(item, columnKey)}</TableCell>}
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+        <TabelaFuncionario employeeList={employeeList} />
     </Layout>
   );
 }
