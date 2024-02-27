@@ -39,6 +39,7 @@ export default function useEmployeeApi() {
                 //setCarregando(true)
                 const newList = buildEmployeeList(responseBody)
                 setEmployeeList(newList)
+                console.log(newList)
             }
         } catch (error) {
             console.error('Ocorreu um erro:', error);
@@ -57,7 +58,8 @@ export default function useEmployeeApi() {
                 address: employee.address,
                 hiringDate: employee.hiringDate.split('-').reverse().join('/'),
                 isActive: employee.isActive ? 'ATIVA' : 'INATIVA',
-                employeeType: getPerfil(employee.employeeType.type)
+                employeeType: getPerfil(employee.employeeType.type),
+                actions: ""
             }
             newEmployeeList.push(newEmployee)
         })

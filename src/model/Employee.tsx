@@ -6,5 +6,6 @@ export default interface Employee {
     address?: string,
     hiringDate?: string,
     isActive?: string,
-    employeeType?: string 
+    employeeType?: string,
+    actions?: string
 }
