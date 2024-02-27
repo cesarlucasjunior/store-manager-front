@@ -7,6 +7,7 @@ import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure
 import { Button } from "@nextui-org/button";
 import Employee from "@/model/Employee";
 import { User } from "@nextui-org/user";
+import ModalAlterarFuncionaria from "./ModalAlterarFuncionaria";
 
 const columns = [
     {
@@ -42,12 +43,6 @@ const columns = [
       label: "AÇÕES",
     },
   ]
-
-// function editar(user: User) {
-//     console.log("editando")
-//     console.log(user)
-    
-//   }
 
 //   function deletar(user: User) {
 //     console.log("deletando")
@@ -121,11 +116,7 @@ export default function TabelaFuncionario(props: TabelaFuncionariaProps) {
           case "actions":
             return (
               <div className="relative flex items-center gap-2">
-                <Tooltip color="warning" content="Editar" className="px-1 py-1">
-                  <span className="text-lg text-default-400 cursor-pointer active:opacity-50" /*onClick={() => editar(user)}*/>
-                    {PencilIcon} 
-                  </span>
-                </Tooltip>
+                <ModalAlterarFuncionaria user={user} />
                 <Tooltip color="danger" content="Deletar" className="px-1 py-1">
                   <span className="text-lg text-danger cursor-pointer active:opacity-50" /*onClick={() => deletar(user)}*/>
                     {TrashIcon}
