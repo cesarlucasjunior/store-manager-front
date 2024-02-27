@@ -6,7 +6,7 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/@nextui-org/theme/dist/components/(input|button|table).js"
+    "./node_modules/@nextui-org/theme/dist/components/(input|button|table|modal|radio).js"
   ],
   darkMode: 'class',
   theme: {
