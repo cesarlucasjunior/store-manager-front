@@ -6,43 +6,6 @@ import { Input } from "@nextui-org/input";
 import {RadioGroup, Radio} from "@nextui-org/radio";
 import { useEffect, useState } from "react";
 import useEmployeeApi from "@/data/hook/useEmployeeApi";
-import { resolve } from "path";
-
-const rows = [
-  {
-    key: "1",
-    name: "Tony Reichert",
-    cpf: "CEO",
-    data_nascimento: "01/01/1900",
-    endereco: "Active",
-    data_contratacao: "01/01/1900"
-
-  },
-  {
-    key: "2",
-    name: "Zoey Lang",
-    cpf: "CEO",
-    data_nascimento: "01/01/1900",
-    endereco: "Active",
-    data_contratacao: "01/01/1900"
-  },
-  {
-    key: "3",
-    name: "Jane Fisher",
-    cpf: "CEO",
-    data_nascimento: "01/01/1900",
-    endereco: "Active",
-    data_contratacao: "01/01/1900"
-  },
-  {
-    key: "4",
-    name: "William Howard",
-    cpf: "CEO",
-    data_nascimento: "01/01/1900",
-    endereco: "Active",
-    data_contratacao: "01/01/1900"
-  },
-];
 
 const columns = [
   {
@@ -87,7 +50,7 @@ export default function Funcionarias() {
       setCarregando(false)
     } catch (error) {
       console.log(error)
-      setCarregando
+      setCarregando(false)
     }
   }
 
@@ -95,7 +58,58 @@ export default function Funcionarias() {
     fetchEmployeeData()
   },[])
 
-  console.log(employeeList)
+  type User = typeof employeeList[0]
+
+  const renderizarCelulaPersonalizada = React.useCallback((user: User,  columnKey: React.Key) => {
+    const cellValue = user[columnKey as keyof User];
+    switch (columnKey) {
+      case "name":
+        return (
+          <User
+            avatarProps={{radius: "lg", src: user.avatar}}
+            description={user.email}
+            name={cellValue}
+          >
+            {user.email}
+          </User>
+        );
+      case "role":
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-sm capitalize">{cellValue}</p>
+            <p className="text-bold text-sm capitalize text-default-400">{user.team}</p>
+          </div>
+        );
+      case "status":
+        return (
+          <Chip className="capitalize" color={statusColorMap[user.status]} size="sm" variant="flat">
+            {cellValue}
+          </Chip>
+        );
+      case "actions":
+        return (
+          <div className="relative flex items-center gap-2">
+            <Tooltip content="Details">
+              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                <EyeIcon />
+              </span>
+            </Tooltip>
+            <Tooltip content="Edit user">
+              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                <EditIcon />
+              </span>
+            </Tooltip>
+            <Tooltip color="danger" content="Delete user">
+              <span className="text-lg text-danger cursor-pointer active:opacity-50">
+                <DeleteIcon />
+              </span>
+            </Tooltip>
+          </div>
+        );
+      default:
+        return cellValue;
+    }
+  }, []);
 
   return carregando ? (<p className="text-white">Carregando...</p>) : (
     <Layout titulo="Funcionárias" subtitulo="Gerenciando as Funcionárias.">
