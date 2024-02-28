@@ -6,13 +6,15 @@ import { Input } from "@nextui-org/input"
 import { Radio, RadioGroup } from "@nextui-org/radio"
 import Employee from "@/model/Employee"
 import { useEffect, useState } from "react"
+import useEmployeeApi from "@/data/hook/useEmployeeApi"
 
 interface ModalAlterarFuncionariaProps {
     user: Employee
 }
 
 export default function ModalAlterarFuncionaria(props: ModalAlterarFuncionariaProps) {
-    const {isOpen, onOpen, onOpenChange} = useDisclosure()
+    const {changeEmployee} = useEmployeeApi() 
+    const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure()
     const [employee, setEmployee] = useState<Employee>({
         key: 0,
         cpf: '',
@@ -22,6 +24,7 @@ export default function ModalAlterarFuncionaria(props: ModalAlterarFuncionariaPr
         hiringDate: '',
         isActive: '',
         employeeType: '',
+        employeeTypeNum: 0,
         actions: ''
     })
 
@@ -37,8 +40,9 @@ export default function ModalAlterarFuncionaria(props: ModalAlterarFuncionariaPr
         }))
     }
 
-    function alterar(){
-        console.log(employee)
+    async function alterar(){
+        changeEmployee(employee)
+        onClose()
     }
 
     return (
@@ -96,10 +100,10 @@ export default function ModalAlterarFuncionaria(props: ModalAlterarFuncionariaPr
                                         value={employee.hiringDate!.split('/').reverse().join('-')}
                                         onChange={handleChange}
                                     />
-                                    <RadioGroup label="Selecione o perfil da funcionária" color="secondary" name="employeeType" value={employee.employeeType} onChange={handleChange}>
-                                        <Radio value="VENDEDORA">Vendedora</Radio>
-                                        <Radio value="CAIXA">Caixa</Radio>
-                                        <Radio value="GERENTE">Gerente</Radio>
+                                    <RadioGroup label="Selecione o perfil da funcionária" color="secondary" name="employeeTypeNum" value={employee.employeeTypeNum?.toString()} onChange={handleChange}>
+                                        <Radio value="2">Vendedora</Radio>
+                                        <Radio value="3">Caixa</Radio>
+                                        <Radio value="1">Gerente</Radio>
                                     </RadioGroup>
                                 </ModalBody>
                                 <ModalFooter className="text-black">

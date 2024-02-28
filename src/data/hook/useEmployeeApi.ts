@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import Cookies from 'js-cookie'
 import Employee from "@/model/Employee"
+import { useRouter } from "next/router"
 
 export default function useEmployeeApi() {
     const [operationStatus, setOperationStatus] = useState('')
     const [message, setMessage ] = useState('')
-    const [carregando, setCarregando] = useState(false)
 
     const [employeeList, setEmployeeList] = useState([{}])
+
+    const router = useRouter()
     
     const token = Cookies.get('token')
     const URL_SERVER = 'http://localhost:8080'
@@ -36,10 +38,47 @@ export default function useEmployeeApi() {
                 }
             } else {
                 const responseBody = await response.json()
-                //setCarregando(true)
                 const newList = buildEmployeeList(responseBody)
                 setEmployeeList(newList)
-                console.log(newList)
+            
+            }
+        } catch (error) {
+            console.error('Ocorreu um erro:', error);
+            enviarStatusOperacao('error', 'Falha durante operação', 15)
+        }
+    }
+
+    async function changeEmployee(employee: Employee) {
+        try {
+            const response = await fetch(`${URL_SERVER}/employee/${employee.key}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(
+                    {
+                        'cpf': employee.cpf, 
+                        'name': employee.name,
+                        'birthDate': employee.birthDate!.split('/').reverse().join('-'),
+                        'address': employee.address,
+                        'hiringDate': employee.hiringDate!.split('/').reverse().join('-'),
+                        'employeeType': employee.employeeTypeNum,
+                    }
+                )
+            });
+            if(!response.ok) {
+                if(response.status === 403) {
+                    enviarStatusOperacao('error', 'Falha durante autenticação', 15)
+                } else {
+                    enviarStatusOperacao('error', 'Falha durante operação', 15)
+                    throw new Error('Erro ao realizar a solicitação GET - Store');
+                }
+            } else {
+                const responseBody = await response.json()
+                console.log(responseBody)
+                getEmployee()
+                router.reload()
             }
         } catch (error) {
             console.error('Ocorreu um erro:', error);
@@ -58,6 +97,7 @@ export default function useEmployeeApi() {
                 address: employee.address,
                 hiringDate: employee.hiringDate.split('-').reverse().join('/'),
                 isActive: employee.isActive ? 'ATIVA' : 'INATIVA',
+                employeeTypeNum: employee.employeeType.id,
                 employeeType: getPerfil(employee.employeeType.type),
                 actions: ""
             }
@@ -76,5 +116,5 @@ export default function useEmployeeApi() {
         }
     }
 
-    return { getEmployee, employeeList }
+    return { getEmployee, employeeList, changeEmployee }
 }
