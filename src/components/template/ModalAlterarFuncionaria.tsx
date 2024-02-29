@@ -9,7 +9,9 @@ import { useEffect, useState } from "react"
 import useEmployeeApi from "@/data/hook/useEmployeeApi"
 
 interface ModalAlterarFuncionariaProps {
-    user: Employee
+    user: Employee,
+    carregando: boolean,
+    setCarregando: (carregando:boolean) => void
 }
 
 export default function ModalAlterarFuncionaria(props: ModalAlterarFuncionariaProps) {
@@ -29,6 +31,7 @@ export default function ModalAlterarFuncionaria(props: ModalAlterarFuncionariaPr
     })
 
     useEffect(() => {
+        console.log("Carregando modal alterar - ", props.user)
         setEmployee(props.user)
       },[])
 
@@ -42,7 +45,8 @@ export default function ModalAlterarFuncionaria(props: ModalAlterarFuncionariaPr
 
     async function alterar(){
         changeEmployee(employee)
-        onClose()
+        props.setCarregando(true)
+        setEmployee(employee)
     }
 
     return (

@@ -7,29 +7,20 @@ import { useEffect, useState } from "react";
 import React from "react";
 import useEmployeeApi from "@/data/hook/useEmployeeApi";
 import TabelaFuncionario from "@/components/template/TabelaFuncionaria";
+import Alert from "@/components/template/Alert";
 
 export default function Funcionarias() {
-  const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure()
-  const {getEmployee, employeeList} = useEmployeeApi()
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
+  const { getEmployee, employeeList, alert, carregando, setCarregando } = useEmployeeApi()
 
-  const [carregando, setCarregando] = useState(true)
-
-  const fetchEmployeeData = async () => {
-    try {
-      await getEmployee()
-      setCarregando(false)
-    } catch (error) {
-      console.log(error)
-      setCarregando(false)
-    }
-  }
 
   useEffect(() => {
-    fetchEmployeeData()
-  },[])  
+    getEmployee()
+  }, [carregando])  
 
   return carregando ? (<p className="text-white">Carregando...</p>) : (
     <Layout titulo="Funcionárias" subtitulo="Gerenciando as Funcionárias.">
+      {alert !== '' ? <Alert type="alert" message={alert === 'success'? "Funcionária alterada com sucesso" : "Erro durante atualização"}/> : null}
       <div className="flex justify-end mb-4">
         <Button className="mt-10" color="primary" variant="ghost" onPress={onOpen}>Adicionar</Button> 
         <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false}   backdrop="opaque" 
@@ -86,7 +77,7 @@ export default function Funcionarias() {
           </ModalContent>
         </Modal>
       </div>
-        <TabelaFuncionario employeeList={employeeList} />
+        <TabelaFuncionario employeeList={employeeList} carregando={carregando} setCarregando={setCarregando}/>
     </Layout>
   );
 }

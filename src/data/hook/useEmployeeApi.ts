@@ -1,15 +1,16 @@
 import { useState } from "react"
 import Cookies from 'js-cookie'
 import Employee from "@/model/Employee"
-import { useRouter } from "next/router"
 
 export default function useEmployeeApi() {
     const [operationStatus, setOperationStatus] = useState('')
     const [message, setMessage ] = useState('')
 
+    const [alert, setAlert] = useState('')
+    const [carregando, setCarregando] = useState<boolean>(true)
+    
     const [employeeList, setEmployeeList] = useState([{}])
 
-    const router = useRouter()
     
     const token = Cookies.get('token')
     const URL_SERVER = 'http://localhost:8080'
@@ -40,7 +41,7 @@ export default function useEmployeeApi() {
                 const responseBody = await response.json()
                 const newList = buildEmployeeList(responseBody)
                 setEmployeeList(newList)
-            
+                setCarregando(false)
             }
         } catch (error) {
             console.error('Ocorreu um erro:', error);
@@ -76,9 +77,7 @@ export default function useEmployeeApi() {
                 }
             } else {
                 const responseBody = await response.json()
-                console.log(responseBody)
-                getEmployee()
-                router.reload()
+                setAlert('success')
             }
         } catch (error) {
             console.error('Ocorreu um erro:', error);
@@ -116,5 +115,5 @@ export default function useEmployeeApi() {
         }
     }
 
-    return { getEmployee, employeeList, changeEmployee }
+    return { getEmployee, employeeList, changeEmployee, alert, carregando, setCarregando }
 }

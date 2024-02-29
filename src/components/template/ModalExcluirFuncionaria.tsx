@@ -1,4 +1,3 @@
-import User from "@/model/User";
 import { Tooltip } from "@nextui-org/tooltip";
 import { TrashIcon } from "../icons";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/modal";
@@ -12,7 +11,7 @@ interface ModalExcluirFuncionariaProps {
 
 export default function ModalExcluirFuncionaria(props: ModalExcluirFuncionariaProps) {
     const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure()
-    
+
     function deletar(user: Employee) {
         console.log("deletando")
         console.log(user)

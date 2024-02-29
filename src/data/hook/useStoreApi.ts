@@ -8,7 +8,7 @@ export default function useStoreApi() {
     const [name, setName] = useState()
     const [cnpj, setCnpj] = useState()
     const [operationStatus, setOperationStatus] = useState('')
-    const [message, setMessage ] = useState('')
+    const [message, setMessage] = useState<string>()
     
 
     const URL_SERVER = 'http://localhost:8080'
