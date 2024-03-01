@@ -85,6 +85,32 @@ export default function useEmployeeApi() {
         }
     }
 
+    async function dismissEmployee(employee: Employee) {
+        try {
+            const response = await fetch(`${URL_SERVER}/employee/dismiss/${employee.key}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+            if(!response.ok) {
+                if(response.status === 403) {
+                    enviarStatusOperacao('error', 'Falha durante autenticação', 15)
+                } else {
+                    enviarStatusOperacao('error', 'Falha durante operação', 15)
+                    throw new Error('Erro ao realizar a solicitação GET - Store');
+                }
+            } else {
+                const responseBody = await response.json()
+                setAlert('success')
+            }
+        } catch (error) {
+            console.error('Ocorreu um erro:', error);
+            enviarStatusOperacao('error', 'Falha durante operação', 15)
+        }
+    }
+
     function buildEmployeeList(listOfEmployee: any[]) {
         let newEmployeeList:Employee[] = []
         listOfEmployee.forEach(employee => {
@@ -115,5 +141,5 @@ export default function useEmployeeApi() {
         }
     }
 
-    return { getEmployee, employeeList, changeEmployee, alert, carregando, setCarregando }
+    return { getEmployee, employeeList, changeEmployee, alert, carregando, setCarregando, dismissEmployee }
 }

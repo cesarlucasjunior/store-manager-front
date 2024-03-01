@@ -89,8 +89,8 @@ export default function TabelaFuncionario(props: TabelaFuncionariaProps) {
           case "actions":
             return (
               <div className="relative flex items-center gap-2">
-                <ModalAlterarFuncionaria employee={user} carregando={props.carregando} setCarregando={props.setCarregando}/>
-                <ModalExcluirFuncionaria user={user} />
+                <ModalAlterarFuncionaria user={user} carregando={props.carregando} setCarregando={props.setCarregando}/>
+                <ModalExcluirFuncionaria user={user} carregando={props.carregando} setCarregando={props.setCarregando}/>
               </div>
             );
           default:

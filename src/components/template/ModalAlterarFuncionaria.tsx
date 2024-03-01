@@ -16,8 +16,8 @@ interface ModalAlterarFuncionariaProps {
 
 export default function ModalAlterarFuncionaria(props: ModalAlterarFuncionariaProps) {
     const {changeEmployee} = useEmployeeApi() 
-    const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure()
-    const [employee, setEmployee] = useState<Employee>({
+    const {isOpen, onOpen, onOpenChange} = useDisclosure()
+    const [employee, setEmployee] = useState<Employee>({ //Não devia ser zerado, devia vir de cima. A atualização ocorre via serviço/ 
         key: 0,
         cpf: '',
         name: '',
@@ -31,27 +31,26 @@ export default function ModalAlterarFuncionaria(props: ModalAlterarFuncionariaPr
     })
 
     useEffect(() => {
-        console.log("Carregando modal alterar - ", props.user)
+        console.log('user - ',props.user)
         setEmployee(props.user)
       },[])
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
         const {name, value} = event.target
-        setEmployee(prevState => ({
-            ...prevState,
+        setEmployee({
+            ...employee,
             [name]: value
-        }))
+        })
     }
 
     async function alterar(){
         changeEmployee(employee)
         props.setCarregando(true)
-        setEmployee(employee)
     }
 
     return (
         <Tooltip color="warning" content="Editar" className="px-1 py-1">
-            <Button isIconOnly color="warning" aria-label="alterar" variant="bordered" onPress={onOpen}>
+            <Button isIconOnly color="warning" aria-label="alterar" variant="bordered" onPress={onOpen} isDisabled={props.user.isActive === 'INATIVA'}>
                 <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false} backdrop="blur">
                     <ModalContent>
                         {(onClose) => (
