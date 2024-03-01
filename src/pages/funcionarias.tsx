@@ -8,15 +8,42 @@ import React from "react";
 import useEmployeeApi from "@/data/hook/useEmployeeApi";
 import TabelaFuncionario from "@/components/template/TabelaFuncionaria";
 import Alert from "@/components/template/Alert";
+import Employee from "@/model/Employee";
 
 export default function Funcionarias() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
-  const { getEmployee, employeeList, alert, carregando, setCarregando } = useEmployeeApi()
+  const { getEmployee, employeeList, alert, carregando, setCarregando, createEmployee } = useEmployeeApi()
+  const [newEmployee, setNewEmployee] = useState<Employee>({ 
+    key: 0,
+    cpf: '',
+    name: '',
+    birthDate: '',
+    address: '',
+    hiringDate: '',
+    isActive: '',
+    employeeType: '',
+    employeeTypeNum: 0,
+    actions: ''
+})
+  
 
 
   useEffect(() => {
     getEmployee()
-  }, [carregando])  
+  }, [carregando])
+
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const {name, value} = event.target
+    setNewEmployee({
+        ...newEmployee,
+        [name]: value
+    })
+  }
+
+  function cadastrar() {
+    createEmployee(newEmployee)
+    onClose()
+  }
 
   return carregando ? (<p className="text-white">Carregando...</p>) : (
     <Layout titulo="Funcionárias" subtitulo="Gerenciando as Funcionárias.">
@@ -33,35 +60,50 @@ export default function Funcionarias() {
                   <Input
                     autoFocus
                     type="text"
+                    name="name"
                     label="Nome"
                     placeholder="Insira o nome"
                     variant="bordered"
+                    value={newEmployee.name}
+                    onChange={handleChange}
                   />
                   <Input
                     type="text"
+                    name="cpf"
                     label="CPF"
                     placeholder="Insira o CPF"
                     variant="bordered"
+                    value={newEmployee.cpf!.replace(/\D/g, '').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')}
+                    onChange={handleChange}
                   />
                   <Input
                     type="date"
+                    name="birthDate"
                     label="Data de Nascimento"
                     placeholder="DD/MM/YYYY"
                     variant="bordered"
+                    value={newEmployee.birthDate!.split('/').reverse().join('-')}
+                    onChange={handleChange}
                   />
                   <Input
                     type="text"
+                    name="address"
                     label="Endereço"
                     placeholder="Insira o endereço completo"
                     variant="bordered"
+                    value={newEmployee.address}
+                    onChange={handleChange}
                   />
                   <Input
                     type="date"
+                    name="hiringDate"
                     label="Data da contratação"
                     placeholder="DD/MM/YYYY"
                     variant="bordered"
+                    value={newEmployee.hiringDate}
+                    onChange={handleChange}
                   />
-                  <RadioGroup label="Selecione o perfil da funcionária" color="secondary" defaultValue="2">
+                  <RadioGroup label="Selecione o perfil da funcionária" color="secondary" defaultValue="2" name="employeeTypeNum" value={newEmployee.employeeTypeNum?.toString()} onChange={handleChange}>
                     <Radio value="2">Vendedora</Radio>
                     <Radio value="3">Caixa</Radio>
                     <Radio value="1">Gerente</Radio>
@@ -70,7 +112,7 @@ export default function Funcionarias() {
                 </ModalBody>
                 <ModalFooter className="text-black">
                   <Button color="danger" variant="ghost" onPress={onClose}>Cancelar</Button>
-                  <Button color="primary" variant="ghost" onPress={onClose}>Cadastrar</Button>
+                  <Button color="primary" variant="ghost" onPress={cadastrar}>Cadastrar</Button>
                 </ModalFooter>
               </div>
             )}

@@ -31,7 +31,6 @@ export default function ModalAlterarFuncionaria(props: ModalAlterarFuncionariaPr
     })
 
     useEffect(() => {
-        console.log('user - ',props.user)
         setEmployee(props.user)
       },[])
 

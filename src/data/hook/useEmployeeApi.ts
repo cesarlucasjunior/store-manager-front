@@ -131,6 +131,45 @@ export default function useEmployeeApi() {
         return newEmployeeList
     }
 
+    async function createEmployee(employee: Employee) {
+        try {
+            const response = await fetch(`${URL_SERVER}/employee`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(
+                    {
+                        'cpf': employee.cpf, 
+                        'name': employee.name,
+                        'birthDate': employee.birthDate!.split('/').reverse().join('-'),
+                        'address': employee.address,
+                        'hiringDate': employee.hiringDate!.split('/').reverse().join('-'),
+                        'employeeType': employee.employeeTypeNum,
+                        'store': 1
+                    }
+                )
+            });
+            if(!response.ok) {
+                if(response.status === 403) {
+                    enviarStatusOperacao('error', 'Falha durante autenticação', 15)
+                } else {
+                    enviarStatusOperacao('error', 'Falha durante operação', 15)
+                    throw new Error('Erro ao realizar a solicitação GET - Store');
+                }
+            } else {
+                const responseBody = await response.json()
+                console.log('Construção - ', responseBody)
+                //setAlert('success')
+                getEmployee()
+            }
+        } catch (error) {
+            console.error('Ocorreu um erro:', error);
+            enviarStatusOperacao('error', 'Falha durante operação', 15)
+        }
+    }
+
     function getPerfil(perfil: string): string {
         if (perfil === 'MANAGER') {
             return 'GERENTE'
@@ -141,5 +180,5 @@ export default function useEmployeeApi() {
         }
     }
 
-    return { getEmployee, employeeList, changeEmployee, alert, carregando, setCarregando, dismissEmployee }
+    return { getEmployee, employeeList, changeEmployee, alert, carregando, setCarregando, dismissEmployee, createEmployee }
 }
